@@ -8,6 +8,24 @@ import (
 	"github.com/SecurityDo/fluency-go/model"
 )
 
+func (r *FluencyClient) ListFPLReport() (entries []*model.FPLReport, err error) {
+
+	res, err := r.serviceClient.Call("api/ds", "list_fpl_report", fsb.NewEmptyMap())
+	if err != nil {
+		fmt.Println("fail to parse list_fpl_report response!")
+		return nil, err
+	}
+	var result struct {
+		Entries []*model.FPLReport `json:"entries,omitempty"`
+	}
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse fpl_report_dao response!")
+		return nil, err
+	}
+	return result.Entries, nil
+
+}
 func (r *FluencyClient) GetFPLReport(name string) (entry *model.FPLReport, err error) {
 
 	var getFPLReportRequest struct {
