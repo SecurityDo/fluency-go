@@ -75,7 +75,7 @@ func metricAWSListAll(client *FluencyClient) {
 
 func testAddMetricGroup(client *FluencyClient) {
 	group := &model.MetricImportGroup{
-		Namespace:     "Fluebcy/Test",
+		Namespace:     "Fluency/Test",
 		Category:      "default",
 		Interval:      60,
 		MinuteEmulate: true,
