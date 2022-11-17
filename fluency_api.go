@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/SecurityDo/fluency-go/fsb"
 	"github.com/SecurityDo/fluency-go/model"
 )
 
 func (r *FluencyClient) ListFPLReport() (entries []*model.FPLReport, err error) {
 
-	res, err := r.serviceClient.Call("api/ds", "list_fpl_report", fsb.NewEmptyMap())
+	res, err := r.serviceClient.Call("api/ds", "list_fpl_report", nil)
 	if err != nil {
 		fmt.Println("fail to parse list_fpl_report response!")
 		return nil, err
@@ -34,8 +33,7 @@ func (r *FluencyClient) GetFPLReport(name string) (entry *model.FPLReport, err e
 
 	getFPLReportRequest.Name = name
 
-	jnode, _ := fsb.NewJNodeInterface(getFPLReportRequest)
-	res, err := r.serviceClient.Call("api/ds", "get_fpl_report", jnode)
+	res, err := r.serviceClient.Call("api/ds", "get_fpl_report", getFPLReportRequest)
 	if err != nil {
 		fmt.Println("fail to parse get_fpl_report response!")
 		return nil, err
@@ -50,4 +48,135 @@ func (r *FluencyClient) GetFPLReport(name string) (entry *model.FPLReport, err e
 	}
 	return ruleRes.Entry, nil
 
+}
+
+/*
+{
+   "namespace": "AWS/AutoScaling",
+   "interval": 60,
+   "category": "default",
+   "minuteEmulate": false,
+   "createdOn": "0001-01-01T00:00:00Z"
+}
+*/
+
+func (r *FluencyClient) MetricAWSListGroups() (groups []*model.MetricImportGroup, err error) {
+	res, err := r.serviceClient.Call("api/ds", "metric_aws_list_groups", nil)
+	if err != nil {
+		fmt.Println("fail to call metric_aws_list_groups:", err.Error())
+		return nil, err
+	}
+	var result model.MetricAWSListGroupsResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_aws_list_groups response!")
+		return nil, err
+	}
+	return result.Groups, nil
+}
+
+/*
+	{
+	   "name": "BurstBalance",
+	   "description": "Used with General Purpose SSD (gp2), Throughput Optimized HDD (st1), and Cold HDD (sc1) volumes only. Provides information about the percentage of I/O credits (for gp2) ...",
+	   "unit": "Percent",
+	   "dimensions": [ "VolumeId" ],
+	   "bucket": "AWS.EBS.BurstBalance",
+	   "namespace": "AWS/EBS",
+	   "category": "default"
+	}
+*/
+func (r *FluencyClient) MetricAWSListMetrics() (metrics []*model.MetricImportEntry, err error) {
+	res, err := r.serviceClient.Call("api/ds", "metric_aws_list_metrics", nil)
+	if err != nil {
+		fmt.Println("fail to call metric_aws_list_metrics:", err.Error())
+		return nil, err
+	}
+	var result model.MetricAWSListMetricsResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_aws_list_metrics response!")
+		return nil, err
+	}
+	return result.Metrics, nil
+}
+
+func (r *FluencyClient) MetricAWSListAll() (groups []*model.MetricImportGroup, metrics []*model.MetricImportEntry, err error) {
+	res, err := r.serviceClient.Call("api/ds", "metric_aws_list_all", nil)
+	if err != nil {
+		fmt.Println("fail to call metric_aws_list_all:", err.Error())
+		return nil, nil, err
+	}
+	var result model.MetricAWSListAllResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_aws_list_all response!")
+		return nil, nil, err
+	}
+	return result.Groups, result.Metrics, nil
+}
+
+func (r *FluencyClient) MetricAWSAddGroup(group *model.MetricImportGroup) (err error) {
+
+	functionName := "metric_aws_add_group"
+
+	input := &model.MetricAWSAddGroupRequest{
+		Group: group,
+	}
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+	return nil
+}
+
+func (r *FluencyClient) MetricAWSAddMetric(metric *model.MetricImportEntry) (err error) {
+
+	functionName := "metric_aws_add_metric"
+
+	input := &model.MetricAWSAddMetricRequest{
+		Metric: metric,
+	}
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+	return nil
+}
+
+func (r *FluencyClient) MetricAWSDeleteMetric(bucketName string) (err error) {
+
+	functionName := "metric_aws_delete_metric"
+
+	input := &model.MetricAWSDeleteMetricRequest{
+		Name: bucketName,
+	}
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+	return nil
+}
+
+func (r *FluencyClient) MetricAWSDeleteMetricGroup(namespace string, category string) (err error) {
+
+	functionName := "metric_aws_delete_group"
+
+	input := &model.MetricAWSDeleteGroupRequest{
+		Namespace: namespace,
+		Category:  category,
+	}
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+	return nil
 }

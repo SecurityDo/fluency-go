@@ -78,3 +78,66 @@ type ScheduleTime struct {
 	Timezone string `json:"timezone"`
 	Interval string `json:"interval"`
 }
+
+// interval in seconds
+type MetricImportGroup struct {
+	Namespace     string `json:"namespace"`
+	Interval      int64  `json:"interval"`
+	Category      string `json:"category"`
+	MinuteEmulate bool   `json:"minuteEmulate"`
+
+	// will be set by server api
+	CreatedOn time.Time `json:"createdOn"`
+}
+
+type MetricImportEntry struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Unit        string `json:"unit"`
+
+	// must match with the incoimg data
+	Dimensions []string `json:"dimensions"`
+	// if the target dimensions differ from original dimensions, optional
+	KeyDimensions []string `json:"keyDimensions,omitempty"`
+
+	// default valueField is "sum"
+	ValueField string `json:"valueField,omitempty"`
+
+	// if differ from the template  aws.ec2.cpuutinization
+	// FluencyMetric string `json:"fluencyMetric,omitempty"`
+	BucketName string `json:"bucket,omitempty"`
+
+	Namespace string `json:"namespace"`
+	Category  string `json:"category"`
+
+	// will be set by server api
+	CreatedOn time.Time `json:"createdOn"`
+}
+
+type MetricAWSListGroupsResponse struct {
+	Groups []*MetricImportGroup `json:"groups"`
+}
+type MetricAWSListMetricsResponse struct {
+	Metrics []*MetricImportEntry `json:"metrics"`
+}
+type MetricAWSListAllResponse struct {
+	Groups  []*MetricImportGroup `json:"groups"`
+	Metrics []*MetricImportEntry `json:"metrics"`
+}
+
+type MetricAWSAddGroupRequest struct {
+	Group *MetricImportGroup `json:"group"`
+}
+
+type MetricAWSAddMetricRequest struct {
+	Metric *MetricImportEntry `json:"metric"`
+}
+
+type MetricAWSDeleteGroupRequest struct {
+	Namespace string `json:"namespace"`
+	Category  string `json:"category"`
+}
+
+type MetricAWSDeleteMetricRequest struct {
+	Name string `json:"name"`
+}

@@ -57,10 +57,16 @@ func (r *HTTPService) SetTokenHeader(tokenHeader string) {
 	r.tokenHeader = tokenHeader
 }
 
-func (r *HTTPService) Call(prefix string, functionName string, args *fsb.JNode) (result *fsb.JNode, err error) {
+func (r *HTTPService) Call(prefix string, functionName string, input interface{}) (result *fsb.JNode, err error) {
 	remoteReq := new(fsb.CallRequest)
 	remoteReq.Function = functionName
-	remoteReq.Kargs = args
+
+	if input == nil {
+		remoteReq.Kargs = fsb.NewJNodeString("{}")
+	} else {
+		remoteReq.Kargs, _ = fsb.NewJNodeInterface(input)
+	}
+
 	reqStr, err := json.Marshal(remoteReq)
 	if err != nil {
 		return nil, fmt.Errorf("args is not a valid json structure")
