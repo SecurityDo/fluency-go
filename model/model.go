@@ -141,3 +141,114 @@ type MetricAWSDeleteGroupRequest struct {
 type MetricAWSDeleteMetricRequest struct {
 	Name string `json:"name"`
 }
+
+type pagerdutyConfig struct {
+	Token          string `json:"token"`
+	IntegrationKey string `json:"integrationKey"`
+}
+
+type emailConfig struct {
+}
+
+type slackConfig struct {
+	Token    string `json:"token"`
+	Team     string `json:"team"`
+	Username string `json:"username"`
+	URL      string `json:"url"`
+}
+
+type ActorConfig struct {
+	Name     string `json:"name"`
+	Customer string `json:"customer"`
+	Type     string `json:"type"`
+
+	BuiltIn bool `json:"builtIn,omitempty"`
+
+	Description string `json:"description"`
+	Disabled    bool   `json:"disabled"`
+
+	Pagerduty *pagerdutyConfig `json:"PagerDuty"`
+	Email     *emailConfig     `json:"Email"`
+	Slack     *slackConfig     `json:"Slack"`
+	//Notification *notificationConfig `json:"Notification"`
+	//SentinelOne  *sentinelOneConfig  `json:"SentinelOne"`
+	//Peplink      *peplinkConfig      `json:"Peplink"`
+	//UEBA *UEBAConfig `json:"UEBA"`
+
+	// Config json.RawMessage `json:"config,omitempty"`
+	// actorHandle ActorHandle `json:"-"`
+
+	CreatedOn time.Time `json:"createdOn"`
+	UpdatedOn time.Time `json:"updatedOn"`
+}
+
+type MetricNotificationActorListResponse struct {
+	Entries []*ActorConfig `json:"entries"`
+}
+
+type FieldAttribute struct {
+	Description  string   `json:"description"`
+	Field        string   `json:"field"`
+	Enums        []string `json:"enums"`
+	Default      string   `json:"default"`
+	Formula      string   `json:"formula"`
+	Optional     bool     `json:"optional"`
+	DataType     string   `json:"dataType"` // string, integer, bool
+	HtmlTemplate string   `json:"htmlTemplate"`
+}
+
+type EventActionEntry struct {
+	Actor      string            `json:"actor"`
+	ActorName  string            `json:"actorName"`
+	Action     string            `json:"action"`
+	Name       string            `json:"name"`
+	Attributes []*FieldAttribute `json:"attributes"`
+	// Attributes map[string]*FieldAttribute `json:"attributes"`
+	CreatedOn time.Time `json:"createdOn"`
+	UpdatedOn time.Time `json:"updatedOn"`
+}
+
+func (r *EventActionEntry) SetFieldDefault(field string, defaultValue string) {
+	for _, attribute := range r.Attributes {
+		if attribute.Field == field {
+			attribute.Default = defaultValue
+		}
+	}
+}
+
+type MetricNotificationEndpointDaoRequestArgs struct {
+	Id    string            `json:"id,omitempty"`
+	Entry *EventActionEntry `json:"entry,omitempty"`
+}
+
+type MetricNotificationEndpointDaoRequest struct {
+	Action string
+	Args   *MetricNotificationEndpointDaoRequestArgs `json:"args"`
+}
+
+type MetricNotificationEndpointDaoResponse struct {
+	Entry *EventActionEntry `json:"entry"`
+}
+
+type MetricAlertAction struct {
+	ID       string   `json:"id"`
+	Patterns []string `json:"patterns"`
+
+	// trigger/resolve
+	Actions   []string `json:"actions"`
+	Endpoints []string `json:"endpoints"`
+}
+
+type MetricNotificationActionDaoRequestArgs struct {
+	Id    string             `json:"id,omitempty"`
+	Entry *MetricAlertAction `json:"entry,omitempty"`
+}
+
+type MetricNotificationActionDaoRequest struct {
+	Action string
+	Args   *MetricNotificationActionDaoRequestArgs `json:"args"`
+}
+
+type MetricNotificationActionDaoResponse struct {
+	Entry *EventActionEntry `json:"entry"`
+}

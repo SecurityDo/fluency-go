@@ -180,3 +180,161 @@ func (r *FluencyClient) MetricAWSDeleteMetricGroup(namespace string, category st
 	}
 	return nil
 }
+
+func (r *FluencyClient) MetricNotificationListActor() (entries []*model.ActorConfig, err error) {
+
+	functionName := "metric_notification_actor_list"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, nil)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	var result model.MetricNotificationActorListResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_aws_list_all response!")
+		return nil, err
+	}
+	return result.Entries, nil
+}
+
+func (r *FluencyClient) MetricNotificationGetEndpoint(name string) (entry *model.EventActionEntry, err error) {
+
+	input := &model.MetricNotificationEndpointDaoRequest{
+		Action: "get",
+		Args: &model.MetricNotificationEndpointDaoRequestArgs{
+			Id: name,
+		},
+	}
+
+	functionName := "metric_notification_endpoint_dao"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	var result model.MetricNotificationEndpointDaoResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_notification_endpoint_dao response!")
+		return nil, err
+	}
+	return result.Entry, nil
+}
+
+// "PagerDuty","Event"
+// "Email":"Email"
+// "Slack":"Message"
+func (r *FluencyClient) MetricNotificationGetDefaultEndpoint(actor string, action string) (entry *model.EventActionEntry, err error) {
+
+	input := &model.MetricNotificationEndpointDaoRequest{
+		Action: "get",
+		Args: &model.MetricNotificationEndpointDaoRequestArgs{
+			Id: "",
+			Entry: &model.EventActionEntry{
+				Actor:  actor,
+				Action: action,
+			},
+		},
+	}
+
+	functionName := "metric_notification_endpoint_dao"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	var result model.MetricNotificationEndpointDaoResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_notification_endpoint_dao response!")
+		return nil, err
+	}
+	return result.Entry, nil
+}
+
+func (r *FluencyClient) MetricNotificationAddEndpoint(entry *model.EventActionEntry) (err error) {
+
+	input := &model.MetricNotificationEndpointDaoRequest{
+		Action: "add",
+		Args: &model.MetricNotificationEndpointDaoRequestArgs{
+			Entry: entry,
+		},
+	}
+
+	functionName := "metric_notification_endpoint_dao"
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (r *FluencyClient) MetricNotificationDeleteEndpoint(name string) (err error) {
+
+	input := &model.MetricNotificationEndpointDaoRequest{
+		Action: "delete",
+		Args: &model.MetricNotificationEndpointDaoRequestArgs{
+			Id: name,
+		},
+	}
+
+	functionName := "metric_notification_endpoint_dao"
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (r *FluencyClient) MetricNotificationAddAction(entry *model.MetricAlertAction) (err error) {
+
+	input := &model.MetricNotificationActionDaoRequest{
+		Action: "add",
+		Args: &model.MetricNotificationActionDaoRequestArgs{
+			Entry: entry,
+		},
+	}
+
+	functionName := "metric_notification_action_dao"
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (r *FluencyClient) MetricNotificationDeleteAction(id string) (err error) {
+
+	input := &model.MetricNotificationActionDaoRequest{
+		Action: "delete",
+		Args: &model.MetricNotificationActionDaoRequestArgs{
+			Id: id,
+		},
+	}
+
+	functionName := "metric_notification_action_dao"
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+
+	return nil
+}
