@@ -252,3 +252,30 @@ type MetricNotificationActionDaoRequest struct {
 type MetricNotificationActionDaoResponse struct {
 	Entry *EventActionEntry `json:"entry"`
 }
+
+type MetricTag struct {
+	Key    string   `json:"key"`
+	Values []string `json:"values"`
+}
+
+// search tags by  metric OR dimension name
+type MetricTagsRequest struct {
+	Metric    string `json:"metric,omitempty"`
+	Dimension string `json:"dimension,omitempty"`
+}
+
+type MetricTagsResponse struct {
+	Tags []*MetricTag `json:"tags"`
+}
+
+// search tags by  metric OR dimension name
+type MetricTagSearchRequest struct {
+	Metric    string `json:"metric"`
+	Dimension string `json:"dimension"`
+	Tag       string `json:"tag"`
+	Pattern   string `json:"pattern"`
+}
+
+type MetricTagSearchResponse struct {
+	Entries []string `json:"entries"`
+}
