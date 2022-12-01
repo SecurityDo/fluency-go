@@ -3,6 +3,8 @@ package model
 import (
 	"encoding/json"
 	"time"
+
+	elastic "gopkg.in/olivere/elastic.v3"
 )
 
 const ( // iota is reset to 0
@@ -279,3 +281,62 @@ type MetricTagSearchRequest struct {
 type MetricTagSearchResponse struct {
 	Entries []string `json:"entries"`
 }
+
+type SimpleSearchOption struct {
+	SearchStr  string `json:"searchStr,omitempty"`
+	RangeFrom  int64  `json:"range_from"`
+	RangeTo    int64  `json:"range_to"`
+	RangeField string `json:"range_field"`
+
+	FetchOffset int           `json:"fetchOffset"`
+	FetchLimit  int           `json:"fetchLimit"`
+	SortField   string        `json:"sortField,omitempty"`
+	SortOrder   string        `json:"sortOrder,omitempty"`
+	Field       string        `json:"field,omitempty"`
+	FieldTerms  []interface{} `json:"fieldTerms,omitempty"`
+}
+
+type FilterEntry struct {
+	Field      string        `json:"field"`
+	Terms      []interface{} `json:"terms"`
+	FilterType string        `json:"filterType"`
+}
+
+// Name: Interval: Key:
+type DateFacetEntry struct {
+	Name string `json:"name,omitempty"`
+	// "day","minute", "hour", "week", "month" or "1.5h"
+	Interval string `json:"interval,omitempty"`
+	// timestamp field
+	Key string `json:"key,omitempty"`
+	// optional
+	Value string `json:"value,omitempty"`
+	// optional
+	FilterField string `json:"filterField,omitempty"`
+	// optional
+	FilterTerm interface{} `json:"filterTerm,omitempty"`
+}
+
+type FacetEntry struct {
+	Field string `json:"field"`
+	Order string `json:"order"`
+	Size  int    `json:"size"`
+}
+
+type FacetsOption struct {
+	DateFacets     []*DateFacetEntry `json:"dateFacets"`
+	Facets         []*FacetEntry     `json:"facets"`
+	MustFilters    []*FilterEntry    `json:"mustFilters"`
+	MustNotFilters []*FilterEntry    `json:"mustNotFilters"`
+}
+
+type SimpleFacetSearchOption struct {
+	SimpleSearchOption
+	Facets *FacetsOption `json:"facets,omitempty"`
+}
+
+type MetricIncidentSearchRequest struct {
+	Options *SimpleFacetSearchOption `json:"options"`
+}
+
+type MetricIncidentSearchResponse elastic.SearchResult

@@ -72,5 +72,6 @@ func Test(t *testing.T) {
 	//metricAWSListAll(client)
 	// testGroupAPI(client)
 	//testMetricNotification(client)
-	testMetricTagAPI(client)
+	//testMetricTagAPI(client)
+	testMetricIncidentAPI(client)
 }

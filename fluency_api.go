@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/SecurityDo/fluency-go/model"
+	// "github.com/olivere/elastic"
 )
 
 func (r *FluencyClient) ListFPLReport() (entries []*model.FPLReport, err error) {
@@ -388,4 +389,27 @@ func (r *FluencyClient) MetricTagSearch(bucket string, dimension string, tag str
 		return nil, err
 	}
 	return result.Entries, nil
+}
+
+func (r *FluencyClient) MetricIncidentSearch(options *model.SimpleFacetSearchOption) (result *model.MetricIncidentSearchResponse, err error) {
+
+	input := &model.MetricIncidentSearchRequest{
+		Options: options,
+	}
+
+	functionName := "metric_incident_search"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	//var result model.MetricIncidentSearchResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_incident_search response!")
+		return nil, err
+	}
+	return result, nil
 }
