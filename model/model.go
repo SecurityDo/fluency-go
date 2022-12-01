@@ -340,3 +340,17 @@ type MetricIncidentSearchRequest struct {
 }
 
 type MetricIncidentSearchResponse elastic.SearchResult
+
+type MetricIncidentUpdateRequest struct {
+	ID        string `json:"id"`
+	Timestamp int64  `json:"timestamp"`
+	Status    string `json:"status"`
+	UpdatedOn int64  `json:"updatedOn"`
+	// ScoreAdjust int    `json:"scoreAdjust"`
+	Username string `json:"username"`
+	Comment  string `json:"comment"`
+
+	//Options *SimpleFacetSearchOption `json:"options"`
+}
+
+// type MetricIncidentSearchResponse elastic.SearchResult

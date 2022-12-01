@@ -72,7 +72,27 @@ func testMetricIncidentSearch(client *FluencyClient) {
 	PrettyPrintJSON(result)
 }
 
+func testMetricIncidentRequest(client *FluencyClient) {
+
+	input := &model.MetricIncidentUpdateRequest{
+		ID:        "20221130_SQSQueueBacklog_s3_notification_fluency-metricstream-uswest2",
+		UpdatedOn: 1669914796000,
+		Status:    "acknowledged", // or empty for comment
+		Username:  "kun@fluencysecurity.com",
+		Comment:   "",
+	}
+
+	err := client.MetricIncidentUpdate(input)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+		// panic(err.Error())
+	}
+
+}
 func testMetricIncidentAPI(client *FluencyClient) {
 
-	testMetricIncidentSearch(client)
+	// testMetricIncidentSearch(client)
+	testMetricIncidentRequest(client)
+
 }

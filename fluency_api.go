@@ -413,3 +413,16 @@ func (r *FluencyClient) MetricIncidentSearch(options *model.SimpleFacetSearchOpt
 	}
 	return result, nil
 }
+
+func (r *FluencyClient) MetricIncidentUpdate(input *model.MetricIncidentUpdateRequest) (err error) {
+
+	functionName := "metric_incident_update"
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+
+	return nil
+}
