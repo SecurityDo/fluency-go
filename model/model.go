@@ -88,6 +88,12 @@ type MetricImportGroup struct {
 	Category      string `json:"category"`
 	MinuteEmulate bool   `json:"minuteEmulate"`
 
+	// for one minute interval, default value is 210/300
+	// for 5 minute interval, default is 450/540
+	// for AWS/SQS namespace, default value is 450/600
+	DelaySecond    int `json:"delaySecond"`
+	MaxDelaySecond int `json:"maxDelaySecond"`
+
 	// will be set by server api
 	CreatedOn time.Time `json:"createdOn"`
 }
