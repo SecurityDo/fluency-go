@@ -426,3 +426,50 @@ func (r *FluencyClient) MetricIncidentUpdate(input *model.MetricIncidentUpdateRe
 
 	return nil
 }
+
+func (r *FluencyClient) MetricAlertList() (result *model.MetricAlertListResponse, err error) {
+
+	// limit default is 30
+	// default range is last 8 hours
+	input := &model.MetricAlertListRequest{}
+
+	functionName := "metric_alert_list"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	// var result model.MetricAlertListResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_alert_list response!")
+		return nil, err
+	}
+	return result, nil
+}
+
+// fullkey  $dayIndex_$alert_$key
+func (r *FluencyClient) MetricAlertGet(fullkey string) (result *model.MetricAlertGetResponse, err error) {
+	// default range is last 8 hours
+	input := &model.MetricAlertGetRequest{
+		ID: fullkey,
+	}
+
+	functionName := "metric_alert_get"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	// var result model.MetricAlertListResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_alert_list response!")
+		return nil, err
+	}
+	return result, nil
+}

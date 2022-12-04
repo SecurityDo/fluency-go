@@ -88,11 +88,71 @@ func testMetricIncidentRequest(client *FluencyClient) {
 		return
 		// panic(err.Error())
 	}
-
 }
+
+func testMetricAlertListRequest(client *FluencyClient) {
+
+	result, err := client.MetricAlertList()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+		// panic(err.Error())
+	}
+
+	PrettyPrintJSON(result)
+}
+
+/*
+	{
+	   "signals": {
+	      "key": "fluency-feed-redist-techdata.fifo",
+	      "values": [
+	         1, 1, 1, 0, 0, 0
+	      ],
+	      "flags": [
+	         1, 1, 0, 0, 0, 0, 0, 0
+	       ]
+	   },
+	   "metrics": [
+	      {
+	         "bucket": "AWS.SQS.ApproximateAgeOfOldestMessage",
+	         "unit": "Seconds",
+	         "values": [
+	            345370, 345431, 345486, 345571,
+	            345457, 0, 0, 0, 0,0
+	         ],
+	         "flags": [
+	            1, 1, 1, 1, 1, 0, 0, 0, 0, 0
+	         ]
+	      }
+	   ],
+	   "slotCount": 481,
+	   "slots": [
+	      1670069040,
+	      1670069100,
+	      1670097780,
+	      1670097840
+	   ],
+	   "rangeFrom": 1670069040,
+	   "rangeTo": 1670097840
+	}
+*/
+func testMetricAlertGetRequest(client *FluencyClient) {
+
+	// "20221202_SQSQueueBacklog_fluency-feed-redist-techdata.fifo"
+	// "20221202_SQSConsumerStopped_s3_notification_fluency-metricstream-uswest2"
+	result, err := client.MetricAlertGet("20221202_SQSConsumerStopped_s3_notification_fluency-metricstream-uswest2")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+		// panic(err.Error())
+	}
+	PrettyPrintJSON(result)
+}
+
 func testMetricIncidentAPI(client *FluencyClient) {
 
 	// testMetricIncidentSearch(client)
-	testMetricIncidentRequest(client)
-
+	// testMetricIncidentRequest(client)
+	testMetricAlertGetRequest(client)
 }

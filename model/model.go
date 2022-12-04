@@ -360,3 +360,73 @@ type MetricIncidentUpdateRequest struct {
 }
 
 // type MetricIncidentSearchResponse elastic.SearchResult
+type Tag struct {
+	Key    string   `json:"name"`
+	Values []string `json:"values"`
+}
+
+type MetricKeyEntry struct {
+	Key    string    `json:"key"`
+	Flags  []int     `json:"flags"`
+	Values []float64 `json:"values"`
+	Tags   []*Tag    `json:"tags,omitempty"`
+}
+
+type metricKeyData struct {
+	Key    string    `json:"key"`
+	Values []float64 `json:"values"`
+	Flags  []int     `json:"flags"`
+}
+
+// Note this API only return the first associated metric values
+type alertMetricResponse struct {
+	// alert name
+	Alert string `json:"alert"`
+	// associate metric
+	Name string `json:"name"`
+	Unit string `json:"unit"`
+	// alert signal values
+	Entries []*MetricKeyEntry `json:"entries"`
+	// associated metric values
+	JoinEntries []*metricKeyData `json:"joinEntries"`
+}
+
+type MetricAlertListRequest struct {
+	// epoch second
+	RangeFrom int64 `json:"rangeFrom"`
+	// epoch second
+	RangeTo int64 `json:"rangeTo"`
+	Limit   int   `json:"limit"`
+}
+
+type MetricAlertListResponse struct {
+	Alerts    []*alertMetricResponse `json:"alerts"`
+	SlotCount int                    `json:"slotCount"`
+	Slots     []int64                `json:"slots"`
+}
+
+type MetricAlertGetRequest struct {
+	ID string `json:"id"`
+	// epoch second
+	RangeFrom int64 `json:"rangeFrom"`
+	// epoch second
+	RangeTo int64 `json:"rangeTo"`
+}
+
+type metricBucketData struct {
+	Bucket string    `json:"bucket"`
+	Unit   string    `json:"unit"`
+	Values []float64 `json:"values"`
+	Flags  []int     `json:"flags"`
+}
+
+type MetricAlertGetResponse struct {
+	Signals   *metricKeyData      `json:"signals"`
+	Metrics   []*metricBucketData `json:"metrics"`
+	SlotCount int                 `json:"slotCount"`
+	Slots     []int64             `json:"slots"`
+
+	// copy from the request
+	RangeFrom int64 `json:"rangeFrom"`
+	RangeTo   int64 `json:"rangeTo"`
+}
