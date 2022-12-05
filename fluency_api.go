@@ -473,3 +473,45 @@ func (r *FluencyClient) MetricAlertGet(fullkey string) (result *model.MetricAler
 	}
 	return result, nil
 }
+
+func (r *FluencyClient) MetricListRuleTemplate() (entries []*model.RuleTemplate, err error) {
+
+	functionName := "metric_list_rule_template"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, nil)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	var result model.MetricListRuleTemplateResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_aws_list_all response!")
+		return nil, err
+	}
+	return result.Entries, nil
+}
+
+func (r *FluencyClient) MetricGetRuleTemplate(name string) (entry *model.RuleTemplate, err error) {
+
+	input := &model.MetricGetRuleTemplateRequest{
+		Name: name,
+	}
+
+	functionName := "metric_get_rule_template"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	var result model.MetricGetRuleTemplateResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_aws_list_all response!")
+		return nil, err
+	}
+	return result.Entry, nil
+}

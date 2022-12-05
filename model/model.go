@@ -430,3 +430,47 @@ type MetricAlertGetResponse struct {
 	RangeFrom int64 `json:"rangeFrom"`
 	RangeTo   int64 `json:"rangeTo"`
 }
+
+type Property struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	Default     string `json:"default"`
+	Required    bool   `json:"required"`
+	//Value    bool   `json:"required"`
+}
+
+type RuleTemplate struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Version     string `json:"version"`
+
+	Metrics []*Property `json:"metrics"`
+
+	Filter *Property `json:"filter"`
+
+	Severity *Property `json:"severity"`
+
+	// Trigger *Detector `json:"trigger"`
+
+	OffDelay *Property `json:"offDelay"`
+
+	// Resolve *Detector `json:"resolve"`
+
+	Code  string      `json:"code"`
+	Props []*Property `json:"props"`
+
+	//Code *CodeTemplate `json:"code"`
+}
+
+type MetricListRuleTemplateResponse struct {
+	Entries []*RuleTemplate `json:"entries"`
+}
+
+type MetricGetRuleTemplateRequest struct {
+	Name string `json:"name"`
+}
+
+type MetricGetRuleTemplateResponse struct {
+	Entry *RuleTemplate `json:"entry"`
+}
