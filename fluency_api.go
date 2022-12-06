@@ -515,3 +515,23 @@ func (r *FluencyClient) MetricGetRuleTemplate(name string) (entry *model.RuleTem
 	}
 	return result.Entry, nil
 }
+
+func (r *FluencyClient) MetricAddRuleFromTemplate(name string, desc string, severity string, template *model.RuleTemplate) (err error) {
+
+	input := &model.MetricAddRuleFromTemplateRequest{
+		Name:        name,
+		Description: desc,
+		Severity:    severity,
+		Template:    template,
+	}
+
+	functionName := "metric_add_rule_from_template"
+
+	_, err = r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return err
+	}
+
+	return nil
+}

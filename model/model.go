@@ -474,3 +474,10 @@ type MetricGetRuleTemplateRequest struct {
 type MetricGetRuleTemplateResponse struct {
 	Entry *RuleTemplate `json:"entry"`
 }
+
+type MetricAddRuleFromTemplateRequest struct {
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	Severity    string        `json:"severity"`
+	Template    *RuleTemplate `json:"template"`
+}
