@@ -288,6 +288,15 @@ type MetricTagSearchResponse struct {
 	Entries []string `json:"entries"`
 }
 
+type MetricIDSearchRequest struct {
+	Metric  string `json:"metric"`
+	Pattern string `json:"pattern"`
+}
+
+type MetricIDSearchResponse struct {
+	Entries []string `json:"entries"`
+}
+
 type SimpleSearchOption struct {
 	SearchStr  string `json:"searchStr,omitempty"`
 	RangeFrom  int64  `json:"range_from"`
@@ -447,7 +456,8 @@ type RuleTemplate struct {
 
 	Metrics []*Property `json:"metrics"`
 
-	Filter *Property `json:"filter"`
+	Filter *Property       `json:"filter"`
+	Query  json.RawMessage `json:"query"`
 
 	Severity *Property `json:"severity"`
 
@@ -479,5 +489,6 @@ type MetricAddRuleFromTemplateRequest struct {
 	Name        string        `json:"name"`
 	Description string        `json:"description"`
 	Severity    string        `json:"severity"`
+	OffDelay    int           `json:"offDelay"`
 	Template    *RuleTemplate `json:"template"`
 }

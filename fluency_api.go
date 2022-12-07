@@ -365,13 +365,13 @@ func (r *FluencyClient) MetricTagList(bucket string, dimension string) (tags []*
 	return result.Tags, nil
 }
 
-func (r *FluencyClient) MetricTagSearch(bucket string, dimension string, tag string, prefix string) (entries []string, err error) {
+func (r *FluencyClient) MetricTagSearch(bucket string, dimension string, tag string, pattern string) (entries []string, err error) {
 
 	input := &model.MetricTagSearchRequest{
 		Metric:    bucket,
 		Dimension: dimension,
 		Tag:       tag,
-		Pattern:   prefix,
+		Pattern:   pattern,
 	}
 
 	functionName := "metric_tag_search"
@@ -385,7 +385,31 @@ func (r *FluencyClient) MetricTagSearch(bucket string, dimension string, tag str
 	var result model.MetricTagSearchResponse
 	err = json.Unmarshal(res.GetBytes(), &result)
 	if err != nil {
-		fmt.Println("fail to parse metric_tag_list response!")
+		fmt.Println("fail to parse metric_tag_search response!")
+		return nil, err
+	}
+	return result.Entries, nil
+}
+
+func (r *FluencyClient) MetricIDSearch(bucket string, pattern string) (entries []string, err error) {
+
+	input := &model.MetricIDSearchRequest{
+		Metric:  bucket,
+		Pattern: pattern,
+	}
+
+	functionName := "metric_id_search"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	var result model.MetricIDSearchResponse
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_id_search response!")
 		return nil, err
 	}
 	return result.Entries, nil

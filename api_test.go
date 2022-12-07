@@ -74,5 +74,6 @@ func Test(t *testing.T) {
 	//testMetricNotification(client)
 	//testMetricTagAPI(client)
 	// testMetricIncidentAPI(client)
-	testMetricRuleTemplateAPI(client)
+	// testMetricRuleTemplateAPI(client)
+	testMetricTagAPI(client)
 }
