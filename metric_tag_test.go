@@ -37,9 +37,9 @@ func testMetricIDSearch(client *FluencyClient, metricBucket string, pattern stri
 
 func testMetricTagAPI(client *FluencyClient) {
 	//testMetricTagList(client, "", "InstanceId")
-	//testMetricTagList(client, "AWS.EC2.CPUUtilization", "")
+	testMetricTagList(client, "AWS.EC2.CPUUtilization", "")
 
-	//testMetricTagSearch(client, "AWS.EC2.CPUUtilization", "", "Name", "audit")
+	// testMetricTagSearch(client, "AWS.EC2.CPUUtilization", "", "metric_stream", "")
 	//testMetricTagSearch(client, "AWS.ApplicationELB.UnHealthyHostCount", "", "fluencyAccountID", "")
-	testMetricIDSearch(client, "AWS.ApplicationELB.UnHealthyHostCount", "torn")
+	//testMetricIDSearch(client, "AWS.ApplicationELB.UnHealthyHostCount", "torn")
 }

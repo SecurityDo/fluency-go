@@ -108,6 +108,12 @@ type MetricImportEntry struct {
 	// if the target dimensions differ from original dimensions, optional
 	KeyDimensions []string `json:"keyDimensions,omitempty"`
 
+	// for one minute interval, default value is 210/300
+	// for 5 minute interval, default is 450/540
+	// for AWS/SQS namespace, default value is 450/600
+	DelaySecond    int `json:"delaySecond"`
+	MaxDelaySecond int `json:"maxDelaySecond"`
+
 	// default valueField is "sum"
 	ValueField string `json:"valueField,omitempty"`
 
