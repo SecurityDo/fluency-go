@@ -498,3 +498,117 @@ type MetricAddRuleFromTemplateRequest struct {
 	OffDelay    int           `json:"offDelay"`
 	Template    *RuleTemplate `json:"template"`
 }
+
+type MetricPoll struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+
+	Interval     int64 `json:"interval"`
+	PollInterval int   `json:"pollInterval,omitempty"`
+	PollDelay    int   `json:"pollDelay,omitempty"`
+	DataDelay    int   `json:"dataDelay,omitempty"`
+
+	IntervalText string `json:"intervalText"`
+	Unit         string `json:"unit"`
+	// double or integer
+	// ValueType string `json:"valueType"`
+	// Dimension string `json:"dimension"`
+	TagSelector *TagSelectorT `json:"tagSelector,omitempty"`
+
+	Namespace  string   `json:"namespace"`
+	Metric     string   `json:"metric"`
+	Dimensions []string `json:"dimensions"`
+	Stat       string   `json:"stat,omitempty"`
+	// Streams   string `json:"streams"`
+	// poll related fields
+	// PollFlag      bool   `json:"pollFlag,omitempty"`
+	MinuteEmulate bool `json:"minuteEmulate,omitempty"`
+
+	Query json.RawMessage `json:"query,omitempty"`
+	//PollInterval  int    `json:"pollInterval,omitempty"`
+	//ExtraPoll     bool   `json:"extraPoll,omitempty"`
+	//UpdateInterval int    `json:"updateInterval"`
+
+	//DelaySecond    int    `json:"delaySecond"`
+	//MaxDelaySecond int    `json:"maxDelaySecond"`
+
+	CreatedOn time.Time `json:"createdOn"`
+	UpdatedOn time.Time `json:"updatedOn"`
+}
+
+type MetricPollDaoRequestArgs struct {
+	Id    string      `json:"id,omitempty"`
+	Entry *MetricPoll `json:"entry,omitempty"`
+	Flag  bool        `json:"flag"`
+}
+
+type MetricPollDaoRequest struct {
+	Action string                    `json:"action"`
+	Args   *MetricPollDaoRequestArgs `json:"args"`
+}
+
+type MetricPollDaoResponse struct {
+	Entry   *MetricPoll   `json:"entry"`   // for get action
+	Entries []*MetricPoll `json:"entries"` // for list action
+}
+
+type ListResourceTagKeysResponse struct {
+	Keys []string `json:"keys"`
+}
+type ListResourceTagValuesResponse struct {
+	Values []string `json:"values"`
+}
+
+type ListResourceTagValuesRequest struct {
+	ResourceTypes []string `json:"resourceTypes"`
+	Key           string   `json:"key"`
+	Pattern       string   `json:"pattern"`
+}
+type ListResourceTagKeysRequest struct {
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+type MetricTagFilter struct {
+	Field string   `json:"field"`
+	Terms []string `json:"terms"`
+}
+
+type TagSelectorT struct {
+	Dimensions    []string           `json:"dimensions"`
+	ResourceTypes []string           `json:"resourceTypes"`
+	MustFilters   []*MetricTagFilter `json:"mustFilters,omitempty"`
+	// TagFilters    []*resourcegroupstaggingapi.TagFilter `json:"tagFilters,omitempty"`
+}
+
+type MetricTestTagFilterRequest struct {
+	Selector *TagSelectorT `json:"selector"`
+}
+
+type MetricTestTagFilterResult struct {
+	Account string   `json:"account"`
+	Region  string   `json:"region"`
+	Count   int      `json:"count"`
+	Hits    []string `json:"hits"`
+}
+
+type MetricTestTagFilterResponse struct {
+	Results []*MetricTestTagFilterResult `json:"results"`
+}
+
+type MetricPollTestRequest struct {
+	Entry *MetricPoll `json:"entry"`
+}
+
+type MetricPollTestResult struct {
+	Account string   `json:"account"`
+	Region  string   `json:"region"`
+	Total   int      `json:"total"`
+	Count   int      `json:"count"`
+	Hits    []string `json:"hits"` // max 10 entries
+}
+
+type MetricPollTestResponse struct {
+	Total   int                     `json:"total"`
+	Count   int                     `json:"count"`
+	Results []*MetricPollTestResult `json:"results"`
+}
