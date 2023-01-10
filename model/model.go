@@ -612,3 +612,58 @@ type MetricPollTestResponse struct {
 	Count   int                     `json:"count"`
 	Results []*MetricPollTestResult `json:"results"`
 }
+
+type MetricFacetEntry struct {
+	Field string `json:"field"`
+	Order string `json:"order"`
+	Size  int    `json:"size"`
+}
+
+type MetricFacetBucket struct {
+	Key      string `json:"key"`
+	DocCount uint64 `json:"doc_count"`
+}
+
+type MetricFacetResult struct {
+	Buckets []*MetricFacetBucket `json:"buckets"`
+}
+type MetricFilterEntry struct {
+	Field      string   `json:"field"`
+	Terms      []string `json:"terms"`
+	FilterType string   `json:"filterType"`
+}
+
+type AggregationOptions struct {
+	MustFilters    []*MetricFilterEntry `json:"mustFilters,omitempty"`
+	MustNotFilters []*MetricFilterEntry `json:"mustNotFilters,omitempty"`
+	Facets         []*MetricFacetEntry  `json:"facets"`
+}
+
+type MetricSearchOptions struct {
+	Aggregations *AggregationOptions `json:"aggregations,omitempty"`
+	RangeFrom    uint64              `json:"range_from"`
+	RangeTo      uint64              `json:"range_to"`
+	FetchLimit   int                 `json:"fetchLimit"`
+}
+
+type MetricSearchRequest struct {
+	FPL     string               `json:"fpl"`
+	Options *MetricSearchOptions `json:"options"`
+}
+
+type MetricSearchResponse struct {
+	Name      string `json:"name"`
+	Unit      string `json:"unit"`
+	Namespace string `json:"namespace"`
+	Metric    string `json:"metric"`
+	// epoch second
+	RangeFrom int `json:"rangeFrom"`
+	RangeTo   int `json:"rangeTo"`
+	Interval  int `json:"interval"`
+	Limit     int `json:"limit"`
+	SlotCount int `json:"slotCount"`
+	// epoch second
+	Slots        []int                         `json:"slots"`
+	Entries      []*MetricKeyEntry             `json:"entries"`
+	Aggregations map[string]*MetricFacetResult `json:"aggregations,omitempty"`
+}

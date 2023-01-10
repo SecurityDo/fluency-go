@@ -847,3 +847,30 @@ func (r *FluencyClient) MetricPollTest(namespace string, metric string, dimensio
 	}
 	return result, nil
 }
+
+func (r *FluencyClient) MetricSearch(fpl string, options *model.MetricSearchOptions) (result *model.MetricSearchResponse, err error) {
+
+	input := &model.MetricSearchRequest{
+		FPL:     fpl,
+		Options: options,
+	}
+
+	functionName := "metric_search"
+
+	res, err := r.serviceClient.Call("api/ds", functionName, input)
+	if err != nil {
+		fmt.Printf("fail to call %s: %s", functionName, err.Error())
+		return nil, err
+	}
+
+	err = json.Unmarshal(res.GetBytes(), &result)
+	if err != nil {
+		fmt.Println("fail to parse metric_poll_test response:", err.Error())
+		return nil, err
+	}
+
+	PrettyPrintJSON(result)
+
+	return result, nil
+
+}
