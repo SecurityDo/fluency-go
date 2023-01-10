@@ -21,12 +21,13 @@ func testSearch(client *FluencyClient) {
 		Terms: []string{"us-east-1", "us-east-2"},
 	})
 
-	aggOptions.Facets = append(aggOptions.Facets, &model.MetricFacetEntry{
-		Field: "lvdb-app",
-	})
-	aggOptions.Facets = append(aggOptions.Facets, &model.MetricFacetEntry{
-		Field: "lvdb-account",
-	})
+	/*
+		aggOptions.Facets = append(aggOptions.Facets, &model.MetricFacetEntry{
+			Field: "lvdb-app",
+		})
+		aggOptions.Facets = append(aggOptions.Facets, &model.MetricFacetEntry{
+			Field: "lvdb-account",
+		}) */
 	client.MetricSearch("metric(\"AWS.EC2.CPUUtilization\")", options)
 }
 

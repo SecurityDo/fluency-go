@@ -613,11 +613,12 @@ type MetricPollTestResponse struct {
 	Results []*MetricPollTestResult `json:"results"`
 }
 
+/*
 type MetricFacetEntry struct {
 	Field string `json:"field"`
 	Order string `json:"order"`
 	Size  int    `json:"size"`
-}
+}*/
 
 type MetricFacetBucket struct {
 	Key      string `json:"key"`
@@ -627,6 +628,7 @@ type MetricFacetBucket struct {
 type MetricFacetResult struct {
 	Buckets []*MetricFacetBucket `json:"buckets"`
 }
+
 type MetricFilterEntry struct {
 	Field      string   `json:"field"`
 	Terms      []string `json:"terms"`
@@ -636,7 +638,7 @@ type MetricFilterEntry struct {
 type AggregationOptions struct {
 	MustFilters    []*MetricFilterEntry `json:"mustFilters,omitempty"`
 	MustNotFilters []*MetricFilterEntry `json:"mustNotFilters,omitempty"`
-	Facets         []*MetricFacetEntry  `json:"facets"`
+	// Facets         []*MetricFacetEntry  `json:"facets"`
 }
 
 type MetricSearchOptions struct {
