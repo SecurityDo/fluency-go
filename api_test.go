@@ -60,7 +60,7 @@ func listFplReport(client *FluencyClient) {
 func Test(t *testing.T) {
 
 	// handle := NewGeoHandle()
-	clientConfig, err := newClientConfig("/etc/api_test_config.json")
+	clientConfig, err := newClientConfig("etc/api_test_config.json")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -78,5 +78,9 @@ func Test(t *testing.T) {
 	// testMetricTagAPI(client)
 
 	//testMetricPollAPI(client)
-	testMetricResourceTagAPI(client)
+	//testMetricResourceTagAPI(client)
+
+	testUserList(client)
+	//testUserAdd(client)
+	//testUserDelete(client)
 }
