@@ -58,8 +58,6 @@ func listFplReport(client *FluencyClient) {
 }
 
 func Test(t *testing.T) {
-
-	// handle := NewGeoHandle()
 	clientConfig, err := newClientConfig("etc/api_test_config.json")
 	if err != nil {
 		panic(err.Error())
@@ -67,20 +65,18 @@ func Test(t *testing.T) {
 	client := NewFluencyClient(clientConfig.URL, clientConfig.Token)
 
 	//client := NewFluencyClient("https://terpvue.cloud.fluencysecurity.com", "")
-	// getFplReport(client)
-	// listFplReport(client)
+	//getFplReport(client)
+	//listFplReport(client)
 	//metricAWSListAll(client)
-	// testGroupAPI(client)
+	//testGroupAPI(client)
 	//testMetricNotification(client)
 	//testMetricTagAPI(client)
-	// testMetricIncidentAPI(client)
-	// testMetricRuleTemplateAPI(client)
-	// testMetricTagAPI(client)
+	//testMetricIncidentAPI(client)
+	//testMetricRuleTemplateAPI(client)
+	//testMetricTagAPI(client)
 
 	//testMetricPollAPI(client)
 	//testMetricResourceTagAPI(client)
 
-	testUserList(client)
-	//testUserAdd(client)
-	//testUserDelete(client)
+	testAuth(client)
 }
